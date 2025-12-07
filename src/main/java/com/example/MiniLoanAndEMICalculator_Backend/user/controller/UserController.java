@@ -7,7 +7,6 @@ import com.example.MiniLoanAndEMICalculator_Backend.user.dto.SignupRequest;
 import com.example.MiniLoanAndEMICalculator_Backend.user.entity.User;
 import com.example.MiniLoanAndEMICalculator_Backend.user.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -17,19 +16,21 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    public UserController(UserService userService,
+                          JwtUtil jwtUtil,
+                          AuthenticationManager authenticationManager) {
+        this.userService = userService;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
+    }
 
     @PostMapping("/signup")
-    public String signup(@Valid @RequestBody SignupRequest signupRequest) {
-        userService.registerUser(signupRequest);
-        return "User registered successfully!";
+    public User signup(@Valid @RequestBody SignupRequest signupRequest) {
+        return userService.registerUser(signupRequest);
     }
 
     @PostMapping("/login")
@@ -45,8 +46,8 @@ public class UserController {
             throw new RuntimeException("Invalid Credentials");
         }
 
-        final User user = (User) userService.loadUserByUsername(loginRequest.getEmail());
-        final String token = jwtUtil.generateToken(user.getUsername());
+        User user = userService.getUserByEmail(loginRequest.getEmail());
+        String token = jwtUtil.generateToken(user.getEmail());
 
         return new LoginResponse(token);
     }
