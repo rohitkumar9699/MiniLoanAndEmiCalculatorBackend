@@ -30,12 +30,11 @@ src/main/java/com/example/miniloan
 │   │   └── LoanRepository.java
 │   └── service
 │       └── LoanService.java
-└── emi
-├── controller
-│   └── EmiController.java
-├── dto
-│   └── EmiRequest.java
-├── service
-│   └── EmiService.java
-└── model
-└── EmiSchedule.java
+    emi
+    ├── controller
+    │   └── EmiController.java
+    ├── dto
+    │   ├── EmiRequest.java
+    │   └── EmiResponse.java
+    ├── service
+    │   └── EmiService.java
