@@ -10,5 +10,4 @@ public class MiniLoanAndEmiCalculatorBackendApplication {
 		SpringApplication.run(MiniLoanAndEmiCalculatorBackendApplication.class, args);
         System.out.println("Backend Application started.......");
 	}
-
 }

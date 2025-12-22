@@ -56,7 +56,7 @@ public class EmiService {
      * Dynamic rate calculation based on amount and duration.
      * Uses smooth scaling between MIN_RATE and MAX_RATE.
      */
-    private double calculateRate(double amount, int months) {
+    protected double calculateRate(double amount, int months) {
         // Clamp values to defined ranges
         double amt = Math.min(Math.max(amount, MIN_AMOUNT), MAX_AMOUNT);
         int m = Math.min(Math.max(months, MIN_MONTHS), MAX_MONTHS);

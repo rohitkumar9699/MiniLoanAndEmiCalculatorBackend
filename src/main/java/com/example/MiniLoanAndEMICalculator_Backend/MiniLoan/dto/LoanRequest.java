@@ -34,7 +34,7 @@ public class LoanRequest {
     public Double getInterestRate() {
         return interestRate;
     }
-    public void setInterestRate(Double interestRate) {
-        this.interestRate = interestRate;
-    }
+//    public void setInterestRate(Double interestRate) {
+//        this.interestRate = interestRate;
+//    }
 }

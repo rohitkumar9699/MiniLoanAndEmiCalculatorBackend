@@ -3,12 +3,15 @@ package com.example.MiniLoanAndEMICalculator_Backend.MiniLoan.service;
 import com.example.MiniLoanAndEMICalculator_Backend.MiniLoan.dto.LoanRequest;
 import com.example.MiniLoanAndEMICalculator_Backend.MiniLoan.entity.Loan;
 import com.example.MiniLoanAndEMICalculator_Backend.MiniLoan.repository.LoanRepository;
+import com.example.MiniLoanAndEMICalculator_Backend.emiCalculator.dto.EmiRequest;
+import com.example.MiniLoanAndEMICalculator_Backend.emiCalculator.dto.EmiResponse;
+import com.example.MiniLoanAndEMICalculator_Backend.emiCalculator.service.EmiService;
 import org.springframework.stereotype.Service;
 
 
 
 @Service
-public class LoanService {
+public class LoanService  extends EmiService {
 
     private final LoanRepository loanRepository;
 
@@ -22,14 +25,17 @@ public class LoanService {
         loan.setUserId(request.getUserId());
         loan.setAmount(request.getAmount());
         loan.setTenure(request.getTenure());
-        loan.setInterestRate(request.getInterestRate());
 
-        // EMI Formula
-        double r = request.getInterestRate() / (12 * 100);
-        int n = request.getTenure();
 
-        double emi = (request.getAmount() * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-        loan.setEmi(emi);
+        double interest = calculateRate(request.getAmount(),request.getTenure());
+        loan.setInterestRate(interest);
+
+        EmiRequest obj = new EmiRequest();
+        obj.setMonths(request.getTenure());
+        obj.setAmount(request.getAmount());
+        EmiResponse emi = calculateEmi(obj);
+
+        loan.setEmi(emi.getMonthlyEmi());
 
         return loanRepository.save(loan);
     }
